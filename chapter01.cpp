@@ -79,6 +79,28 @@ int main() {
 
 	// 一个图像复制到另一个图像中，而两者的数据类型不一 定相同，那就要使用convertTo
 	image1.convertTo(image2, CV_32F, 1 / 255.0, 0.0);
+        
+	Mat image = imread("lena.jpg");
+	Mat logo = imread("logo.jpg");
+
+	// 在图像的右下角定义一个ROI
+	Mat imageROI(image,
+		Rect(image.cols - logo.cols, //ROI坐标
+		image.rows - logo.rows,
+		logo.cols, logo.rows));// ROI大小
+
+
+	logo.copyTo(imageROI);
+
+
+	// imageROI= image(Range(image.rows-logo.rows,image.rows), 
+	//                 Range(image.cols-logo.cols,image.cols));
+
+	// 把标志作为掩码（必须是灰度图像）
+	Mat mask(logo);
+
+	// 插入标志，只复制掩码不为0的位置
+	logo.copyTo(imageROI, mask);
 
 
 	waitKey(0); // 等待按键
